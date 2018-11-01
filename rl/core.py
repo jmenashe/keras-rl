@@ -50,7 +50,7 @@ class Agent(object):
         """
         return {}
 
-    def fit(self, env, nb_steps, action_repetition=1, callbacks=None, verbose=1,
+    def fit(self, env, nb_steps, nb_episodes=None, action_repetition=1, callbacks=None, verbose=1,
             visualize=False, nb_max_start_steps=0, start_step_policy=None, log_interval=10000,
             nb_max_episode_steps=None):
         """Trains the agent on the given environment.
@@ -227,6 +227,8 @@ class Agent(object):
                     observation = None
                     episode_step = None
                     episode_reward = None
+                    if nb_episodes is not None and episode >= nb_episodes:
+                      break
         except KeyboardInterrupt:
             # We catch keyboard interrupts here so that training can be be safely aborted.
             # This is so common that we've built this right into this function, which ensures that
