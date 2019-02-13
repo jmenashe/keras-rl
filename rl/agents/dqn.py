@@ -240,6 +240,9 @@ class DQNAgent(AbstractDQNAgent):
     def backward(self, reward, terminal):
         # Store most recent experience in memory.
         if self.step % self.memory_interval == 0:
+            if self.processor is not None:
+                self.recent_observation = self.processor.process_observation(self.recent_observation)
+                self.recent_action = self.processor.process_action(self.recent_action)
             self.memory.append(self.recent_observation, self.recent_action, reward, terminal,
                                training=self.training)
 
@@ -656,6 +659,9 @@ class NAFAgent(AbstractDQNAgent):
     def backward(self, reward, terminal):
         # Store most recent experience in memory.
         if self.step % self.memory_interval == 0:
+            if self.processor is not None:
+                self.recent_observation = self.processor.process_observation(self.recent_observation)
+                self.recent_action = self.processor.process_action(self.recent_action)
             self.memory.append(self.recent_observation, self.recent_action, reward, terminal,
                                training=self.training)
 
