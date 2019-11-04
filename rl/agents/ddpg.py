@@ -193,13 +193,26 @@ class DDPGAgent(Agent):
             return batch
         return self.processor.process_state_batch(batch)
 
-    def select_action(self, state):
+    def select_action(self, observation):
+        state = self.memory.get_recent_state(observation)
         batch = self.process_state_batch([state])
         action = self.actor.predict_on_batch(batch).flatten()
         assert action.shape == (self.nb_actions,)
 
         # Apply noise, if a random process is set.
-        if self.training and self.random_process is not None:
+        #if self.training and self.random_process is not None:
+        # TODO: Randomization isn't supposed to be necessary
+        # outside of training but DDPG routinely falls into
+        # local minima.
+        if self.random_process is not None:
+          if self.recent_observation is not None:
+            obs_delta = np.linalg.norm(observation - self.recent_observation)
+          else:
+            obs_delta = None
+          if self.training \
+             or self.step % 100 == 0 \
+             or (obs_delta is not None and obs_delta < .001) \
+            :
             noise = self.random_process.sample()
             assert noise.shape == action.shape
             action += noise
@@ -208,8 +221,7 @@ class DDPGAgent(Agent):
 
     def forward(self, observation):
         # Select an action.
-        state = self.memory.get_recent_state(observation)
-        action = self.select_action(state)  # TODO: move this into policy
+        action = self.select_action(observation)
 
         # Book-keeping.
         self.recent_observation = observation
