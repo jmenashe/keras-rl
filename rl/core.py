@@ -4,6 +4,8 @@ from copy import deepcopy
 
 import numpy as np
 from keras.callbacks import History
+import tensorflow as tf
+import keras
 
 from rl.callbacks import (
     CallbackList,
@@ -49,8 +51,12 @@ class Agent(object):
             Dictionnary with agent configuration
         """
         return {}
+    def fit(self, env, nb_steps, nb_episodes=None, action_repetition=1, callbacks=None, verbose=1,visualize=False, nb_max_start_steps=0, start_step_policy=None, log_interval=10000,nb_max_episode_steps=None):
+      with self.graph.as_default():
+        with self.session.as_default():
+          self._fit(env, nb_steps, nb_episodes, action_repetition, callbacks, verbose,visualize, nb_max_start_steps, start_step_policy, log_interval,nb_max_episode_steps)
 
-    def fit(self, env, nb_steps, nb_episodes=None, action_repetition=1, callbacks=None, verbose=1,
+    def _fit(self, env, nb_steps, nb_episodes=None, action_repetition=1, callbacks=None, verbose=1,
             visualize=False, nb_max_start_steps=0, start_step_policy=None, log_interval=10000,
             nb_max_episode_steps=None):
         """Trains the agent on the given environment.
@@ -239,7 +245,12 @@ class Agent(object):
 
         return history
 
-    def test(self, env, nb_episodes=1, action_repetition=1, callbacks=None, visualize=True,
+    def test(self, env, nb_episodes=1, action_repetition=1, callbacks=None, visualize=True, nb_max_episode_steps=None, nb_max_start_steps=0, start_step_policy=None, verbose=1):
+      with self.graph.as_default():
+        with self.session.as_default():
+          self._test(env, nb_episodes, action_repetition, callbacks, visualize, nb_max_episode_steps, nb_max_start_steps, start_step_policy, verbose)
+
+    def _test(self, env, nb_episodes=1, action_repetition=1, callbacks=None, visualize=True,
              nb_max_episode_steps=None, nb_max_start_steps=0, start_step_policy=None, verbose=1):
         """Callback that is called before training begins.
 
