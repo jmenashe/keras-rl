@@ -43,6 +43,7 @@ class Agent(object):
         self.processor = processor
         self.training = False
         self.step = 0
+        self.stop = False
 
     def get_config(self):
         """Configuration of the agent for serialization.
@@ -54,7 +55,9 @@ class Agent(object):
     def fit(self, env, nb_steps, nb_episodes=None, action_repetition=1, callbacks=None, verbose=1,visualize=False, nb_max_start_steps=0, start_step_policy=None, log_interval=10000,nb_max_episode_steps=None):
       with self.graph.as_default():
         with self.session.as_default():
-          self._fit(env, nb_steps, nb_episodes, action_repetition, callbacks, verbose,visualize, nb_max_start_steps, start_step_policy, log_interval,nb_max_episode_steps)
+          history = self._fit(env, nb_steps, nb_episodes, action_repetition, callbacks, verbose,visualize, nb_max_start_steps, start_step_policy, log_interval,nb_max_episode_steps)
+          self.stop = False
+          return history
 
     def _fit(self, env, nb_steps, nb_episodes=None, action_repetition=1, callbacks=None, verbose=1,
             visualize=False, nb_max_start_steps=0, start_step_policy=None, log_interval=10000,
@@ -233,6 +236,8 @@ class Agent(object):
                     observation = None
                     episode_step = None
                     episode_reward = None
+                    if self.stop:
+                      break
                     if nb_episodes is not None and episode >= nb_episodes:
                       break
         except KeyboardInterrupt:
@@ -242,13 +247,14 @@ class Agent(object):
             did_abort = True
         callbacks.on_train_end(logs={'did_abort': did_abort})
         self._on_train_end()
-
         return history
 
     def test(self, env, nb_episodes=1, action_repetition=1, callbacks=None, visualize=True, nb_max_episode_steps=None, nb_max_start_steps=0, start_step_policy=None, verbose=1):
       with self.graph.as_default():
         with self.session.as_default():
-          self._test(env, nb_episodes, action_repetition, callbacks, visualize, nb_max_episode_steps, nb_max_start_steps, start_step_policy, verbose)
+          history = self._test(env, nb_episodes, action_repetition, callbacks, visualize, nb_max_episode_steps, nb_max_start_steps, start_step_policy, verbose)
+          self.stop = False
+          return history
 
     def _test(self, env, nb_episodes=1, action_repetition=1, callbacks=None, visualize=True,
              nb_max_episode_steps=None, nb_max_start_steps=0, start_step_policy=None, verbose=1):
@@ -404,6 +410,8 @@ class Agent(object):
                 'nb_steps': episode_step,
             }
             callbacks.on_episode_end(episode, episode_logs)
+            if self.stop:
+              break
         callbacks.on_train_end()
         self._on_test_end()
 
