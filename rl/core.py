@@ -6,6 +6,7 @@ import numpy as np
 from keras.callbacks import History
 import tensorflow as tf
 import keras
+import util
 
 from rl.callbacks import (
     CallbackList,
@@ -188,7 +189,7 @@ class Agent(object):
                     if self.processor is not None:
                         observation, r, done, info = self.processor.process_step(observation, r, done, info)
                     for key, value in info.items():
-                        if not np.isreal(value):
+                        if not util.is_real_number(value):
                             continue
                         if key not in accumulated_info:
                             accumulated_info[key] = np.zeros_like(value)
@@ -372,7 +373,7 @@ class Agent(object):
                     callbacks.on_action_end(action)
                     reward += r
                     for key, value in info.items():
-                        if not np.isreal(value):
+                        if not util.is_real_number(value):
                             continue
                         if key not in accumulated_info:
                             accumulated_info[key] = np.zeros_like(value)

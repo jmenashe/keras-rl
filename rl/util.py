@@ -3,7 +3,13 @@ import numpy as np
 from keras.models import model_from_config, Sequential, Model, model_from_config
 import keras.optimizers as optimizers
 import keras.backend as K
+import numbers
 
+def is_real_number(n):
+  is_num = isinstance(n, numbers.Number)
+  is_real = np.isreal(n)
+  both = is_num and is_real
+  return both
 
 def clone_model(model, custom_objects={}):
     # Requires Keras 1.0.7 since get_config has breaking changes.
