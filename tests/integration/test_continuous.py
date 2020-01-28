@@ -8,7 +8,7 @@ from keras.layers import Dense, Activation, Flatten, Input, Concatenate
 from keras.optimizers import Adam
 
 from rl.agents import NAFAgent, DDPGAgent
-from rl.random import OrnsteinUhlenbeckProcess
+from rl.random_process import OrnsteinUhlenbeckProcess
 from rl.memory import SequentialMemory
 
 

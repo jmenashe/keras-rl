@@ -8,7 +8,7 @@ import keras.backend as K
 import keras.optimizers as optimizers
 
 from rl.core import Agent
-from rl.random import OrnsteinUhlenbeckProcess
+from rl.random_process import OrnsteinUhlenbeckProcess
 from rl.util import *
 
 

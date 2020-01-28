@@ -7,7 +7,7 @@ from keras.optimizers import Adam
 
 from rl.agents import DDPGAgent
 from rl.memory import SequentialMemory
-from rl.random import OrnsteinUhlenbeckProcess
+from rl.random_process import OrnsteinUhlenbeckProcess
 
 
 ENV_NAME = 'Pendulum-v0'

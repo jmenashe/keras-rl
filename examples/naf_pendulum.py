@@ -7,7 +7,7 @@ from keras.optimizers import Adam
 
 from rl.agents import NAFAgent
 from rl.memory import SequentialMemory
-from rl.random import OrnsteinUhlenbeckProcess
+from rl.random_process import OrnsteinUhlenbeckProcess
 from rl.core import Processor
 
 class PendulumProcessor(Processor):
