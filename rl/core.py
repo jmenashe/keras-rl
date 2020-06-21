@@ -6,7 +6,7 @@ import numpy as np
 from keras.callbacks import History
 import tensorflow as tf
 import keras
-import util
+from rl import util
 
 from rl.callbacks import (
     CallbackList,
