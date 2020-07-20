@@ -248,8 +248,7 @@ class Agent(object):
                   }
                   callbacks.on_episode_end(episode, episode_logs)
                   observation = None
-                  if self.stop:
-                    break
+                  break
       except KeyboardInterrupt:
           # We catch keyboard interrupts here so that training can be be safely aborted.
           # This is so common that we've built this right into this function, which ensures that
